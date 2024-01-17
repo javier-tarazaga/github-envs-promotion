@@ -6,9 +6,9 @@ on:
         tag_prefix:
           required: true
           type: string
-        secrets:
-          AWS_CREDENTIALS:
-          required: true
+    secrets:
+      AWS_CREDENTIALS:
+        required: true
 
 jobs:
   build:

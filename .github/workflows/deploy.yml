@@ -25,7 +25,7 @@ jobs:
     with:
       tag_prefix: pr-${{github.event.number}}
     secrets:
-      AWS_CREDENTIALS: ${{ secrets.AWS_CREDENTIALS }}
+      AWS_CREDENTIALS: "patata"
 
   deploy-to-staging:
     if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
