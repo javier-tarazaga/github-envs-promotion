@@ -52,6 +52,7 @@ jobs:
     name: Build Production
     needs: deploy-to-staging
     uses: ./.github/workflows/build.yml
+    environment: production
     with:
       environment: production
 
