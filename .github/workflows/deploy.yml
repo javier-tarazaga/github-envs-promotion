@@ -48,8 +48,10 @@ jobs:
           echo "Deploy to staging"
 
   deploy-to-production:
-    # This if condition ensures it can run independtly of the jobs defined in the needs tag
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.hotfix == 'true'
+     # This job runs if it's a hotfix or after successful staging deployment
+    if: |
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.hotfix == 'true') ||
+      (github.event_name == 'workflow_dispatch' && needs.deploy-to-staging.result == 'success')
     name: Build and deploy to Production
     runs-on: ubuntu-latest
     needs: [integrity, deploy-to-staging]
