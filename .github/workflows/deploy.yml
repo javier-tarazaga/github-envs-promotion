@@ -1,19 +1,14 @@
-name: On main merge workflow
+name: Deploy Workflow
 
 on:
-  push:
-    branches: 
-      - with-promotions # Trigger the workflow on push to the main branch
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Deployment Environment'
-        required: true
-        type: choice
-        options:
-        - 'staging'
-        - 'production'
-        default: 'staging'
+      # If this is setup to true, we will bypass staging and deploy directly to production
+      hotfix:
+        description: 'Hotfix'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   integrity:
@@ -21,7 +16,7 @@ jobs:
     uses: ./.github/workflows/integrity.yml
 
   deploy-to-staging:
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.hotfix != 'true'
     name: Build and deploy to Staging
     runs-on: ubuntu-latest
     needs: integrity
@@ -53,9 +48,11 @@ jobs:
           echo "Deploy to staging"
 
   deploy-to-production:
+    # This if condition ensures it can run independtly of the jobs defined in the needs tag
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.hotfix == 'true'
     name: Build and deploy to Production
     runs-on: ubuntu-latest
-    needs: deploy-to-staging
+    needs: [integrity, deploy-to-staging]
     environment: production
 
     steps:
