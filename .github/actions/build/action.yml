@@ -6,6 +6,7 @@ inputs:
     required: true
     type: string
 
+
 runs:
   using: 'composite'
   steps:
@@ -28,6 +29,7 @@ runs:
 
     - name: Install dependencies
       run: npm ci
+      shell: bash
 
     - name: Load .env file
       uses: falti/dotenv-action@v1.0.4
@@ -39,6 +41,7 @@ runs:
 
     - name: Build
       run: npm run build
+      shell: bash
 
     - name: Upload build folder as an artifact
       uses: actions/upload-artifact@v4
