@@ -18,10 +18,10 @@ on:
 jobs:
   integrity:
     name: Code Integrity
-    uses: ./.github/workflows/integrity.yaml
+    uses: ./.github/workflows/integrity.yml
   build:
     name: Build
-    uses: ./.github/workflows/build.yaml
+    uses: ./.github/workflows/build.yml
     with:
       tag_prefix: tag-${{steps.common-variables.outputs.git-commit-sha }}
     secrets:
