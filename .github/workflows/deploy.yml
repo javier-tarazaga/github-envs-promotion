@@ -38,6 +38,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Download dist folder
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: build/
+
       - name: Load .env file
         uses: falti/dotenv-action@v1.0.4
         with:
@@ -61,6 +67,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Download dist folder
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: build/
 
       - name: Load .env file
         uses: falti/dotenv-action@v1.0.4
