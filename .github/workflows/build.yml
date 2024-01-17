@@ -1,0 +1,51 @@
+name: "Build"
+
+on:
+  workflow_call:
+    inputs:
+        tag_prefix:
+          required: true
+          type: string
+        secrets:
+          AWS_CREDENTIALS:
+          required: true
+
+build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: npm
+
+      - name: Reuse Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Echo some env variables
+        run: |
+          echo "Variable 1: ${{ vars.ENV_FILE_PATH }}"
+
+      - name: Load .env file
+        uses: falti/dotenv-action@v1.0.4
+        with:
+          path: .env.${{ github.event.inputs.environment }}
+          log-variables: true
+          export-variables: true
+          keys-case: upper
+
+      - name: Build
+        run: npm run build
