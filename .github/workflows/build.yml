@@ -3,12 +3,9 @@ name: "Build"
 on:
   workflow_call:
     inputs:
-        tag_prefix:
+        environment:
           required: true
           type: string
-    secrets:
-      AWS_CREDENTIALS:
-        required: true
 
 jobs:
   build:
@@ -36,14 +33,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Echo some env variables
-        run: |
-          echo "Variable 1: ${{ vars.ENV_FILE_PATH }}"
-
       - name: Load .env file
         uses: falti/dotenv-action@v1.0.4
         with:
-          path: .env.${{ github.event.inputs.environment }}
+          path: .env.${{ inputs.environment }}
           log-variables: true
           export-variables: true
           keys-case: upper
@@ -54,5 +47,5 @@ jobs:
       - name: Upload build folder as an artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build
+          name: build-${{ inputs.environment }}
           path: build/
