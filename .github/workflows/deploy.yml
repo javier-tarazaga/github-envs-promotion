@@ -3,7 +3,7 @@ name: Deploy App
 on:
   push:
     branches: 
-      - main # Trigger the workflow on push to the main branch
+      - with-promotions # Trigger the workflow on push to the main branch
   workflow_dispatch:
     inputs:
       environment:
